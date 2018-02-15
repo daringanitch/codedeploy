@@ -19,7 +19,7 @@ EOF
 cat > scripts/02-install-certs.sh <<EOF
 EOF
 
-#additional scripts add to appsec.yml they can be anything
+#additional scripts add to appsec.yml they can be anything examples below
 cat > scripts/bundle-install.sh <<EOF
 #!/bin/bash
 source /etc/profile
@@ -44,7 +44,7 @@ cat > scripts/check-status.sh <<EOF
 echo "check-status"
 EOF
 
-
+#this handles the order of execution, who runs it and for how long
 cat > appspec.yml <<EOF
 version: 0.0
 os: linux
