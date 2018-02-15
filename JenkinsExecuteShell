@@ -1,0 +1,73 @@
+cat > scripts/run-helper-scripts.sh <<'EOF'
+#!/bin/bash
+export PATH=$PATH:/usr/local/bin
+cd deployment-root/*/$DEPLOYMENT_ID/deployment-archive/scripts
+pwd
+
+echo "running helper scripts"
+for script in `ls * | grep "^[0-9].*.sh"`;do
+    echo "Running $script" >> /tmp/scripts.log
+   ./$script >> /tmp/scripts.log
+done
+EOF
+
+
+###helper scripts
+cat > scripts/01-deploy-app.sh <<EOF
+EOF
+
+cat > scripts/02-install-certs.sh <<EOF
+EOF
+
+#additional scripts add to appsec.yml they can be anything
+cat > scripts/bundle-install.sh <<EOF
+#!/bin/bash
+source /etc/profile
+EOF
+
+
+cat > scripts/assets-precompile.sh <<EOF
+#!/bin/bash
+source /etc/profile
+EOF
+
+cat > scripts/db-migrate.sh <<EOF
+#!/bin/bash
+EOF
+
+cat > scripts/restart-server.sh <<EOF
+#!/bin/bash
+EOF
+
+cat > scripts/check-status.sh <<EOF
+#!/bin/bash
+echo "check-status"
+EOF
+
+
+cat > appspec.yml <<EOF
+version: 0.0
+os: linux
+hooks:
+  BeforeInstall:
+    - location: scripts/run-helper-scripts.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/bundle-install.sh
+      timeout: 300
+      runas: root
+    - location: scripts/assets-precompile.sh
+      timeout: 300
+      runas: root
+    - location: scripts/db-migrate.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/restart-server.sh
+      timeout: 300
+      runas: root
+  ValidateService:
+    - location: scripts/check-status.sh
+      timeout: 300
+      runas: root
