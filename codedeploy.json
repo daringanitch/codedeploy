@@ -1,0 +1,29 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "CodeDeploy Template",
+  "Parameters" : {
+    "ASG" : {
+      "Description" : "AutoscalingGroup",
+      "Type" : "String"
+    }
+  },
+  "Resources": {
+    "codedeploy": {
+      "Type": "AWS::CodeDeploy::Application",
+      "Properties": {}
+    },
+    "deploymentgroup": {
+      "Type": "AWS::CodeDeploy::DeploymentGroup",
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "codedeploy"
+        },
+        "AutoScalingGroups": [
+          { "Ref": "ASG" }
+        ],
+        "DeploymentConfigName": "CodeDeployDefault.HalfAtATime",
+        "ServiceRoleArn": "arn:aws:iam::038736731981:role/code-deploy"
+      }
+    }
+  }
+}
